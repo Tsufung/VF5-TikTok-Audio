@@ -12,6 +12,7 @@ local.properties
 
 # App build outputs (keep structure, ignore APKs)
 app/build/
+*.apk
 
 # Gradle wrapper jar (should be committed but listing for reference)
 # gradle/wrapper/gradle-wrapper.jar

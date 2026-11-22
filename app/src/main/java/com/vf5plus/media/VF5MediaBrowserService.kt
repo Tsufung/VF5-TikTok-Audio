@@ -63,7 +63,21 @@ class VF5MediaBrowserService : MediaBrowserServiceCompat(), WebAudioEngine.Engin
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         MediaButtonReceiver.handleIntent(mediaSession, intent)
-        return START_STICKY
+        return START_NOT_STICKY
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        try {
+            engine.stopAndRelease()
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.cancel(NOTIFICATION_ID)
+            mediaSession.isActive = false
+            mediaSession.release()
+        } catch (e: Exception) {}
+        stopSelf()
+        android.os.Process.killProcess(android.os.Process.myPid())
     }
 
     override fun onGetRoot(
@@ -188,6 +202,11 @@ class VF5MediaBrowserService : MediaBrowserServiceCompat(), WebAudioEngine.Engin
         }
         val playPauseTitle = if (isPlaying) "Tạm dừng" else "Phát"
 
+        val stopIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(
+            this,
+            PlaybackStateCompat.ACTION_STOP
+        )
+
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
@@ -198,6 +217,7 @@ class VF5MediaBrowserService : MediaBrowserServiceCompat(), WebAudioEngine.Engin
             .addAction(android.R.drawable.ic_media_previous, "Trước", prevIntent)
             .addAction(playPauseIcon, playPauseTitle, playPauseIntent)
             .addAction(android.R.drawable.ic_media_next, "Sau", nextIntent)
+            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Dừng", stopIntent)
             .setStyle(
                 MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
@@ -217,6 +237,15 @@ class VF5MediaBrowserService : MediaBrowserServiceCompat(), WebAudioEngine.Engin
 
         override fun onPause() {
             engine.pause()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(STOP_FOREGROUND_DETACH)
+            } else {
+                @Suppress("DEPRECATION")
+                stopForeground(false)
+            }
+            val notif = buildNotification(engine.currentAuthor, engine.currentTitle, false)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(NOTIFICATION_ID, notif)
         }
 
         override fun onSkipToNext() {
@@ -238,8 +267,14 @@ class VF5MediaBrowserService : MediaBrowserServiceCompat(), WebAudioEngine.Engin
         }
 
         override fun onStop() {
-            engine.pause()
-            stopForeground(STOP_FOREGROUND_REMOVE)
+            try {
+                engine.stopAndRelease()
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                manager.cancel(NOTIFICATION_ID)
+                mediaSession.isActive = false
+            } catch (e: Exception) {}
+            stopSelf()
         }
     }
 

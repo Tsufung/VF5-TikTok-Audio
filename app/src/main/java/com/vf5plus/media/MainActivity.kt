@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity(), WebAudioEngine.EngineListener {
         val btnTikTok: Button = findViewById(R.id.btnTikTok)
         val btnYouTube: Button = findViewById(R.id.btnYouTube)
         val btnTestNext: Button = findViewById(R.id.btnTestNext)
+        val btnStopAll: Button = findViewById(R.id.btnStopAll)
 
         btnTikTok.setOnClickListener {
             engine.loadTikTokForYou()
@@ -70,6 +71,14 @@ class MainActivity : AppCompatActivity(), WebAudioEngine.EngineListener {
             }
         }
 
+        btnStopAll.setOnClickListener {
+            engine.stopAndRelease()
+            val stopIntent = Intent(this, VF5MediaBrowserService::class.java)
+            stopService(stopIntent)
+            finishAffinity()
+            android.os.Process.killProcess(android.os.Process.myPid())
+        }
+
         updateUiState(engine.currentAuthor, engine.currentTitle, engine.isPlaying)
     }
 
@@ -83,6 +92,15 @@ class MainActivity : AppCompatActivity(), WebAudioEngine.EngineListener {
         // Tháo BackgroundWebView khỏi màn hình điện thoại và gắn lại vào VirtualDisplay ngầm
         engine.detachFromActivity()
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        if (isFinishing) {
+            engine.stopAndRelease()
+            val stopIntent = Intent(this, VF5MediaBrowserService::class.java)
+            stopService(stopIntent)
+        }
+        super.onDestroy()
     }
 
     // ─── EngineListener ───────────────────────────────────────────────────────

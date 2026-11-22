@@ -37,6 +37,7 @@
         <service
             android:name=".VF5MediaBrowserService"
             android:exported="true"
+            android:stopWithTask="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />

@@ -216,22 +216,26 @@ class WebAudioEngine private constructor(private val appContext: Context) {
 
     // ─── AudioFocus & WakeLock ────────────────────────────────────────────────
 
+    private var audioFocusRequest: AudioFocusRequest? = null
+
     fun requestAudioFocus() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val audioAttributes = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build()
-                val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                    .setAudioAttributes(audioAttributes)
-                    .setOnAudioFocusChangeListener { focusChange ->
-                        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                            pause()
+                if (audioFocusRequest == null) {
+                    val audioAttributes = AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build()
+                    audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                        .setAudioAttributes(audioAttributes)
+                        .setOnAudioFocusChangeListener { focusChange ->
+                            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                                pause()
+                            }
                         }
-                    }
-                    .build()
-                audioManager.requestAudioFocus(focusRequest)
+                        .build()
+                }
+                audioFocusRequest?.let { audioManager.requestAudioFocus(it) }
             } else {
                 @Suppress("DEPRECATION")
                 audioManager.requestAudioFocus(
@@ -252,6 +256,24 @@ class WebAudioEngine private constructor(private val appContext: Context) {
             }
         } catch (e: Exception) {
             Log.e(TAG, "requestAudioFocus error: ${e.message}")
+        }
+    }
+
+    fun abandonAudioFocus() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                audioFocusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
+            } else {
+                @Suppress("DEPRECATION")
+                audioManager.abandonAudioFocus(null)
+            }
+            wakeLock?.let {
+                if (it.isHeld) {
+                    it.release()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "abandonAudioFocus error: ${e.message}")
         }
     }
 
@@ -474,15 +496,48 @@ class WebAudioEngine private constructor(private val appContext: Context) {
         mainHandler.post {
             val js = """
                 (function() {
-                    var vids = document.querySelectorAll('video');
-                    for (var i = 0; i < vids.length; i++) {
-                        vids[i].pause();
+                    var mediaEls = document.querySelectorAll('video, audio');
+                    for (var i = 0; i < mediaEls.length; i++) {
+                        try {
+                            mediaEls[i].pause();
+                            mediaEls[i].muted = true;
+                            mediaEls[i].volume = 0;
+                        } catch(e) {}
+                    }
+                    var iframes = document.querySelectorAll('iframe');
+                    for (var j = 0; j < iframes.length; j++) {
+                        try {
+                            var ifvids = iframes[j].contentWindow.document.querySelectorAll('video, audio');
+                            for (var k = 0; k < ifvids.length; k++) {
+                                ifvids[k].pause();
+                                ifvids[k].muted = true;
+                            }
+                        } catch(e) {}
                     }
                 })();
             """.trimIndent()
             webView.evaluateJavascript(js, null)
+            abandonAudioFocus()
             isPlaying = false
             listener?.onPlaybackStateChanged(false)
+        }
+    }
+
+    fun stopAndRelease() {
+        mainHandler.post {
+            pause()
+            abandonAudioFocus()
+            wakeLock?.let { if (it.isHeld) it.release() }
+            try {
+                webView.stopLoading()
+                webView.loadUrl("about:blank")
+            } catch (e: Exception) {}
+            try {
+                if (presentation?.isShowing == true) {
+                    presentation?.dismiss()
+                }
+                virtualDisplay?.release()
+            } catch (e: Exception) {}
         }
     }
 
