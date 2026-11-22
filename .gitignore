@@ -1,0 +1,36 @@
+# Android
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# App build outputs (keep structure, ignore APKs)
+app/build/
+
+# Gradle wrapper jar (should be committed but listing for reference)
+# gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+*.war
+*.ear
+
+# Keystore for continuous auto-updates
+*.keystore
+*.jks
+!app/keystore.jks
+signing.properties
+
+# IDE
+*.swp
+*.swo
+*~
+.vscode/

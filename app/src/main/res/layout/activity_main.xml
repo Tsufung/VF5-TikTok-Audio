@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    android:orientation="vertical">
+
+    <!-- Top Action Bar (4 Quick Buttons) -->
+    <LinearLayout
+        android:id="@+id/topToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#1E1E24"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <Button
+            android:id="@+id/btnTikTok"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FE2C55"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="TikTok"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnYouTube"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FF0000"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="YouTube"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnTestNext"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="#2563EB"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="Thử Next"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnPlayPause"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:backgroundTint="#10B981"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="Play/Pause"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Info Banner -->
+    <LinearLayout
+        android:id="@+id/statusBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#26262B"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvAudioStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="🔊 Âm thanh nền xe VF5: Đang chạy"
+            android:textColor="#34D399"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvMetadata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TikTok / YouTube Audio"
+            android:textColor="#9CA3AF"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Main Container where BackgroundWebView is dynamically attached -->
+    <FrameLayout
+        android:id="@+id/webViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#000000" />
+
+</LinearLayout>
