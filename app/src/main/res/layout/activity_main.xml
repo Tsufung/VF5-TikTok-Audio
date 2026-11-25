@@ -1,131 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
-    android:orientation="vertical">
+    android:background="#0D1117"
+    android:fillViewport="true">
 
-    <!-- Top Action Bar (4 Quick Buttons) -->
     <LinearLayout
-        android:id="@+id/topToolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="#1E1E24"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="8dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
 
-        <Button
-            android:id="@+id/btnTikTok"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:backgroundTint="#FE2C55"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="TikTok"
-            android:textAllCaps="false"
+        <!-- Tiêu đề -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VF5 TikTok Remote"
             android:textColor="#FFFFFF"
-            android:textSize="12sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnYouTube"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:backgroundTint="#FF0000"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="YouTube"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Cầu nối phím vô-lăng Android Auto điều khiển TikTok chính chủ"
+            android:textColor="#8B949E"
+            android:textSize="13sp" />
 
+        <!-- Thẻ Đèn Trạng Thái -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="#161B22"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TRẠNG THÁI HỆ THỐNG"
+                android:textColor="#58A6FF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- Đèn 1: Hỗ trợ tiếp cận -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/ledAccessibility"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="#EF4444" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="Quyền Hỗ trợ tiếp cận:"
+                    android:textColor="#E6EDF3"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvAccessibilityStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chưa bật"
+                    android:textColor="#F87171"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Đèn 2: Service nhận vô-lăng -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/ledMediaService"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="#6B7280" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="Service nhận phím Vô-lăng:"
+                    android:textColor="#E6EDF3"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvMediaServiceStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chưa kích hoạt"
+                    android:textColor="#9CA3AF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Công tắc giữ sáng màn hình thông minh -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Giữ sáng màn hình khi đang mở TikTok"
+                    android:textColor="#C9D1D9"
+                    android:textSize="13sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchKeepScreenOn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLiveInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="TikTok Chính Chủ — Video #1 • Chờ mở TikTok"
+                android:textColor="#8B949E"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- 4 Nút Thao Tác Chính -->
         <Button
-            android:id="@+id/btnTestNext"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
+            android:id="@+id/btnAccessibility"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="18dp"
             android:backgroundTint="#2563EB"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:text="Thử Next"
+            android:text="1. Cấp quyền Hỗ trợ tiếp cận"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btnPlayPause"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:backgroundTint="#10B981"
+            android:id="@+id/btnStartRemote"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#059669"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:text="Play/Pause"
+            android:text="2. Kích hoạt nhận phím Vô-lăng"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="11sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btnStopAll"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:backgroundTint="#DC2626"
+            android:id="@+id/btnOpenTikTok"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#FE2C55"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:text="Dừng hẳn"
+            android:text="3. Mở TikTok ngay"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="11sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
-    </LinearLayout>
-
-    <!-- Info Banner -->
-    <LinearLayout
-        android:id="@+id/statusBanner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#26262B"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tvAudioStatus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="🔊 Âm thanh nền xe VF5: Đang chạy"
-            android:textColor="#34D399"
-            android:textSize="11sp"
+        <Button
+            android:id="@+id/btnTestSwipe"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#D97706"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="4. Test vuốt sau 4 giây"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
+        <!-- Nút phụ tắt service khi không dùng -->
+        <Button
+            android:id="@+id/btnStopRemote"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#21262D"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="Tắt nhận phím Vô-lăng"
+            android:textAllCaps="false"
+            android:textColor="#F87171"
+            android:textSize="13sp" />
+
         <TextView
-            android:id="@+id/tvMetadata"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TikTok / YouTube Audio"
-            android:textColor="#9CA3AF"
-            android:textSize="11sp" />
+            android:layout_marginTop="14dp"
+            android:text="Mẹo dùng: Bật cả 2 đèn xanh -> Mở TikTok chính chủ. App chỉ vuốt khi TikTok đang mở trên màn hình để tránh vuốt nhầm sang bản đồ hay tin nhắn."
+            android:textColor="#8B949E"
+            android:textSize="12sp" />
+
     </LinearLayout>
-
-    <!-- Main Container where BackgroundWebView is dynamically attached -->
-    <FrameLayout
-        android:id="@+id/webViewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#000000" />
-
-</LinearLayout>
+</ScrollView>

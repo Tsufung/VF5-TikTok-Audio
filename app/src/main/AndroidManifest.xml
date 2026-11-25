@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Permissions required for media playback & background operation -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Quyền tối thiểu cho Foreground Media Service và thông báo Android Auto -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Cho phép Android 11+ nhìn thấy và khởi chạy ứng dụng TikTok chính chủ -->
+    <queries>
+        <package android:name="com.ss.android.ugc.trill" />
+        <package android:name="com.zhiliaoapp.musically" />
+        <package android:name="com.ss.android.ugc.trill.go" />
+        <package android:name="com.zhiliaoapp.musically.go" />
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -14,15 +20,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-        android:usesCleartextTraffic="true">
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
-        <!-- Android Auto Application Metadata -->
+        <!-- Android Auto Media App Metadata -->
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
-        <!-- Main Phone UI -->
+        <!-- Màn hình điều khiển và test trên điện thoại -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -33,18 +38,31 @@
             </intent-filter>
         </activity>
 
-        <!-- Android Auto MediaBrowserService -->
+        <!-- Android Auto MediaBrowserService giữ phím vô-lăng -->
         <service
             android:name=".VF5MediaBrowserService"
             android:exported="true"
-            android:stopWithTask="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
 
-        <!-- Steering Wheel Media Button Receiver -->
+        <!-- Dịch vụ Hỗ trợ tiếp cận giả lập vuốt TikTok và giữ sáng màn hình -->
+        <service
+            android:name=".TikTokSwipeAccessibilityService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- Receiver nhận sự kiện phím cứng vô-lăng -->
         <receiver
             android:name="androidx.media.session.MediaButtonReceiver"
             android:exported="true">

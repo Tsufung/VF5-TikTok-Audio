@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">VF5 Audio</string>
+    <string name="app_name">VF5 TikTok Remote</string>
+    <string name="accessibility_service_description">Cho phép VF5 TikTok Remote giả lập thao tác vuốt chuyển clip và tạm dừng trên ứng dụng TikTok chính chủ khi bấm phím vô-lăng Android Auto, đồng thời giữ sáng màn hình khi đang mở TikTok.</string>
 </resources>
